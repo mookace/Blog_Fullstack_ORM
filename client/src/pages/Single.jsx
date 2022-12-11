@@ -39,10 +39,15 @@ export const Single = () => {
     }
   };
 
+  const getText = (html) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent;
+  };
+
   return (
     <div className="single">
       <div className="content">
-        <img src={post?.img} alt="..." />
+        <img src={`../uploads/${post?.img}`} alt="..." />
         <div className="user">
           <img src={post.user?.img} alt="" />
           <div className="info">
@@ -59,7 +64,7 @@ export const Single = () => {
           )}
         </div>
         <h1>{post.title}</h1>
-        {post.desc}
+        {getText(post.desc)}
       </div>
       <Menu cat={post.cat} />
     </div>

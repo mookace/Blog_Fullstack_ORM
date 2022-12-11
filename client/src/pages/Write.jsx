@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const Write = () => {
   const state = useLocation().state;
@@ -21,13 +21,29 @@ export const Write = () => {
       console.log(err);
     }
   };
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const imgUrl = upload();
-
+    const imgUrl = await upload();
     try {
-      // state ? await axios.post(`/post/updatepost/${state.id}`)
+      if (state) {
+        await axios.post(`/post/updatepost/${state.id}`, {
+          title,
+          desc: value,
+          cat,
+          img: img ? imgUrl : "",
+        });
+      } else {
+        await axios.post(`/post/addpost`, {
+          title,
+          desc: value,
+          cat,
+          img: img ? imgUrl : "",
+        });
+      }
+
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
@@ -124,7 +140,7 @@ export const Write = () => {
               value="design"
               onChange={(e) => setCat(e.target.value)}
             />
-            <label htmlFor="design">Sesign</label>
+            <label htmlFor="design">Design</label>
           </div>
           <div className="cat">
             <input
